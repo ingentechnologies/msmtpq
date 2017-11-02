@@ -1,0 +1,8 @@
+[Unit]
+Description=Flush msmtp queue when a message is queued.
+
+[Path]
+PathExistsGlob=/usr/local/msmtpq/queue/*.mail
+
+[Install]
+WantedBy=paths.target
