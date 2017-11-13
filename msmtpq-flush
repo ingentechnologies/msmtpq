@@ -1,5 +1,6 @@
 #!/bin/bash
-set -e
+#set -e this causes the script to exit on first non 0 return which breaks 
+#if there's a failed message
 set -o pipefail
 shopt -s nullglob
 
@@ -61,8 +62,10 @@ for mail in "$QUEUE_DIR"/*.mail/; do
     echo "$prefix sending"
     xargs -0 -a "$mail/msmtp_flags" msmtp -X - < "$mail/message"
     ret="$?"
+    
     if [[ ! "$ret" -eq 0 ]] ; then
         echo "$prefix faild to send; msmtp rc = $ret"
+	mv "$mail" "$QUEUE_DIR/$(basename "$mail" .mail).fail"
         continue
     fi
     if ! rm -rf "$mail"; then
